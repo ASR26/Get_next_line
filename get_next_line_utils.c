@@ -6,7 +6,7 @@
 /*   By: asolano- <asolano-@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 09:56:45 by asolano-          #+#    #+#             */
-/*   Updated: 2022/05/02 09:57:18 by asolano-         ###   ########.fr       */
+/*   Updated: 2022/05/11 11:03:28 by asolano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ char	*ft_strjoin(char *s1, char *s2)
 		s1[0] = '\0';
 	}
 	if (!s1 || !s2)
-		return (NULL);
+		return (0);
 	str = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (str == NULL)
-		return (NULL);
+	if (str == 0)
+		return (0);
 	i = -1;
 	c = 0;
 	if (s1)

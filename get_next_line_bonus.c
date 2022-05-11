@@ -6,7 +6,7 @@
 /*   By: asolano- <asolano-@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 08:52:59 by asolano-          #+#    #+#             */
-/*   Updated: 2022/05/02 11:20:41 by asolano-         ###   ########.fr       */
+/*   Updated: 2022/05/10 12:56:10 by asolano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,9 @@ char	*ft_save(char *str)
 	}
 	s = malloc(sizeof (char) * (ft_strlen(str) - i + 1));
 	if (!s)
+	{
 		return (0);
+	}
 	i++;
 	c = 0;
 	while (str[i])
