@@ -1,71 +1,88 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: asolano- <asolano-@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/02 09:56:45 by asolano-          #+#    #+#             */
-/*   Updated: 2022/05/02 09:57:18 by asolano-         ###   ########.fr       */
+/*   Created: 2022/05/12 08:49:45 by asolano-          #+#    #+#             */
+/*   Updated: 2022/05/12 08:49:48 by asolano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <stdlib.h>
+#include "get_next_line_bonus.h"
 
-size_t	ft_strlen(char *str)
+unsigned int	ft_strlen(const char *s)
 {
-	size_t	c;
+	unsigned int	len;
 
-	c = 0;
-	if (!str)
-		return (0);
-	while (str[c] != '\0')
-		c++;
-	return (c);
+	len = 0;
+	while (*s++)
+		len++;
+	return (len);
 }
 
-char	*ft_strchr(char *s, int c)
+void	*ft_memcpy(void *dst, const void *src, unsigned int n)
 {
-	int	i;
+	unsigned char	*tmp;
+	unsigned char	*src_tmp;
 
-	i = 0;
-	if (!s)
+	if (dst == 0 && src == 0)
 		return (0);
-	if (c == '\0')
-		return ((char *)&s[ft_strlen(s)]);
-	while (s[i] != '\0')
+	tmp = (unsigned char *) dst;
+	src_tmp = (unsigned char *) src;
+	while (n > 0)
 	{
-		if (s[i] == (char) c)
-			return ((char *)&s[i]);
-		i++;
+		*tmp++ = *src_tmp++;
+		n--;
 	}
+	return (dst);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	char	*ptr;
+
+	ptr = (char *)s;
+	while (*ptr)
+	{
+		if (*ptr == c)
+			return (ptr);
+		ptr++;
+	}
+	if (*ptr == c)
+		return (ptr);
 	return (0);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	size_t	i;
-	size_t	c;
-	char	*str;
+	unsigned int	size;
+	char			*ptr;
+	int				i;
 
-	if (!s1)
-	{
-		s1 = (char *)malloc(1 * sizeof(char));
-		s1[0] = '\0';
-	}
-	if (!s1 || !s2)
-		return (NULL);
-	str = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (str == NULL)
-		return (NULL);
-	i = -1;
-	c = 0;
-	if (s1)
-		while (s1[++i] != '\0')
-			str[i] = s1[i];
-	while (s2[c] != '\0')
-		str[i++] = s2[c++];
-	str[ft_strlen(s1) + ft_strlen(s2)] = '\0';
-	free(s1);
-	return (str);
+	size = ft_strlen(s1) + ft_strlen(s2) + 1;
+	ptr = (char *) malloc(sizeof(char) * size);
+	if (ptr == 0)
+		return (ptr);
+	i = 0;
+	while (*s1)
+		ptr[i++] = *s1++;
+	while (*s2)
+		ptr[i++] = *s2++;
+	ptr[i] = '\0';
+	return (ptr);
+}
+
+int	ft_line_len(char *ptr)
+{
+	int	len;
+
+	len = 0;
+	while (ptr[len] && ptr[len] != '\n')
+		len++;
+	if (ptr[len] == '\n')
+		len++;
+	return (len);
 }

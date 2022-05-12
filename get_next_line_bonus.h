@@ -5,23 +5,27 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: asolano- <asolano-@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/02 09:57:28 by asolano-          #+#    #+#             */
-/*   Updated: 2022/05/02 11:13:58 by asolano-         ###   ########.fr       */
+/*   Created: 2022/05/12 08:48:40 by asolano-          #+#    #+#             */
+/*   Updated: 2022/05/12 08:48:45 by asolano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
 
-# include <stdlib.h>
-# include <unistd.h>
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
-size_t	ft_strlen(char *str);
-char	*ft_strchr(char *s, int c);
-char	*ft_strjoin(char *s1, char *s2);
-char	*get_next_line(int ft);
-char	*ft_get_line(char *save);
-char	*ft_save(char *save);
-char	*ft_read_and_save(int fd, char *save);
+unsigned int	ft_strlen(const char *s);
+void			*ft_memcpy(void *dst, const void *src, unsigned int n);
+char			*ft_strchr(const char *s, int c);
+char			*ft_strjoin(char const *s1, char const *s2);
+int				ft_line_len(char *ptr);
+
+void			ft_clean_memory(char **memory);
+int				ft_fill_memory(char **memory, int fd);
+char			*ft_get_line(char **memory);
+char			*get_next_line(int fd);
 
 #endif

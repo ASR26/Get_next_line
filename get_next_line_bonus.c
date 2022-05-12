@@ -5,104 +5,94 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: asolano- <asolano-@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/02 08:52:59 by asolano-          #+#    #+#             */
-/*   Updated: 2022/05/10 12:56:10 by asolano-         ###   ########.fr       */
+/*   Created: 2022/05/12 08:48:25 by asolano-          #+#    #+#             */
+/*   Updated: 2022/05/12 08:48:30 by asolano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
+#include <unistd.h>
 #include "get_next_line_bonus.h"
 
-char	*ft_get_line(char *str)
+void	ft_clean_memory(char **memory)
 {
-	int		i;
-	char	*s;
+	char	*new_memo;
+	int		len;
+	int		new_size;
 
-	i = 0;
-	if (!str[i])
-		return (0);
-	while (str[i] && str[i] != '\n')
-		i++;
-	s = malloc(sizeof (char) * (i + 2));
-	if (!s)
-		return (0);
-	i = 0;
-	while (str[i] && str[i] != '\n')
+	if (*memory == NULL)
 	{
-		s[i] = str[i];
-		i++;
+		*memory = (char *) malloc (sizeof(char));
+		**memory = '\0';
+		return ;
 	}
-	if (str[i] == '\n')
-	{
-		s[i] = '\n';
-		i++;
-	}
-	s[i] = '\0';
-	return (s);
+	len = ft_line_len(*memory);
+	new_size = ft_strlen(&(*memory)[len]) + 1;
+	new_memo = (char *) malloc(sizeof(char) * new_size);
+	ft_memcpy(new_memo, &(*memory)[len], new_size);
+	free(*memory);
+	*memory = new_memo;
 }
 
-char	*ft_save(char *str)
+int	ft_fill_memory(char **memory, int fd)
 {
-	int		i;
-	int		c;
-	char	*s;
+	char	buffer[BUFFER_SIZE + 1];
+	int		ret;
+	char	*tmp;
 
-	i = 0;
-	while (str[i] && str[i] != '\n')
-		i++;
-	if (!str[i])
+	ft_clean_memory(memory);
+	ret = 1;
+	while (!ft_strchr(*memory, '\n') && ret)
 	{
-		free(str);
-		return (0);
+		ret = read(fd, buffer, BUFFER_SIZE);
+		if (ret < 1)
+			return (ret);
+		buffer[ret] = '\0';
+		tmp = *memory;
+		*memory = ft_strjoin(*memory, buffer);
+		free(tmp);
 	}
-	s = malloc(sizeof (char) * (ft_strlen(str) - i + 1));
-	if (!s)
-	{
-		return (0);
-	}
-	i++;
-	c = 0;
-	while (str[i])
-		s[c++] = str[i++];
-	s[c] = '\0';
-	free(str);
-	return (s);
+	return (ret);
 }
 
-char	*ft_read_and_save(int fd, char *str)
+char	*ft_get_line(char **memory)
 {
-	char	*buff;
-	int		read_bytes;
+	char	*line;
+	int		len;
+	int		i;
 
-	buff = malloc((BUFFER_SIZE + 1) * sizeof (char));
-	if (!buff)
-		return (0);
-	read_bytes = 1;
-	while (!ft_strchr(str, '\n') && read_bytes != 0)
+	len = ft_line_len(*memory);
+	if (len == 0)
+		return (NULL);
+	line = (char *) malloc(sizeof(char) * (len + 1));
+	i = 0;
+	while (i < len)
 	{
-		read_bytes = read(fd, buff, BUFFER_SIZE);
-		if (read_bytes == -1)
-		{
-			free(buff);
-			return (0);
-		}
-		buff[read_bytes] = '\0';
-		str = ft_strjoin(str, buff);
+		line[i] = (*memory)[i];
+		i++;
 	}
-	free(buff);
-	return (str);
+	line[i] = '\0';
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
+	static char	*memory[256] = {0};
 	char		*line;
-	static char	*str[257];
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 256)
-		return (0);
-	str[fd] = ft_read_and_save(fd, str[fd]);
-	if (!str[fd])
-		return (0);
-	line = ft_get_line(str[fd]);
-	str[fd] = ft_save(str[fd]);
+	if (fd < 0 || fd > 255)
+		return (NULL);
+	if (ft_fill_memory(&memory[fd], fd) == -1)
+	{
+		free(memory[fd]);
+		memory[fd] = NULL;
+		return (NULL);
+	}
+	line = ft_get_line(&memory[fd]);
+	if (!line)
+	{
+		free(memory[fd]);
+		memory[fd] = NULL;
+	}
 	return (line);
 }
