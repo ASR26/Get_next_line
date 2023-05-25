@@ -1,6 +1,8 @@
-# Descripción
-Este proyecto consiste en crear una función que leerá un file descriptor y nos devolverá la siguiente línea que encuentre. Para ello usará un buffer cuyo tamaño definiremos al compilarlo.
-se compilará de la siguiente forma:
+# Description
+
+This proyect consists in creating a function which will read from a file descriptor and will return the first line it finds. In order to do that the function will be provided with a buffer whose size will be defined during the compilation.
+To compile:
+
 ```
-cc -Wall -Werror -Wextra -D BUFFER_SIZE=xx <archivos.c>
+cc -Wall -Werror -Wextra -D BUFFER_SIZE=xx <files.c>
 ```
